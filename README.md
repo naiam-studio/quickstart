@@ -152,6 +152,25 @@ sncast invoke \
 
 Check the transaction in the [explorer](https://explorer-zstarknet.d.karnot.xyz/).
 
+## Add a simple frontend
+
+A single page app that generates a proof and calls a previously deployed contract.
+
+First, copy all the necessary artifacts to the app folder:
+
+```bash
+make artifacts
+```
+
+Install bun, js dependencies, and run the app:
+
+```bash
+cd app
+curl -fsSL https://bun.sh/install | bash
+bun install
+bun run serve
+```
+
 ## Get help
 
 Something got wrong?
