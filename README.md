@@ -267,11 +267,19 @@ make account-create
 
 3) Top up the account via the faucet
 
-Visit the Ztarknet faucet at https://faucet.ztarknet.cash/ and send tokens to the account address produced by `make account-create`. You can also use the helper `account-topup` target which reads the address from `sncast` and calls the `admin/topup` script:
+Visit the Ztarknet faucet at https://faucet.ztarknet.cash/ and send tokens to the account address produced by `make account-create`. 
+
+**Option A - Manual (Recommended for first time):**
+Copy the account address from the output of `make account-create` and paste it in the faucet.
+
+**Option B - Automated (requires admin/.env configuration):**
+Use the helper `account-topup` target which reads the address from `sncast` and calls the `admin/topup` script:
 
 ```bash
 make account-topup
 ```
+
+> **Note:** `make account-topup` requires the account to exist first. Run `make account-create` before using this command.
 
 4) Deploy the account contract
 
@@ -488,6 +496,24 @@ This is harmless if you cloned the repo (circuit already exists). You can procee
 This happens when re-running `make account-create` with the same account name. You can either:
 - Use the existing account (proceed to `make account-deploy`)
 - Delete `~/.starknet_accounts/` and create a new account
+
+#### "make account-topup" fails with "Cannot read properties of undefined"
+
+This error occurs when the account address is not found. Possible causes:
+1. Account not created yet - Run `make account-create` first
+2. Account name mismatch - Check that the account name in Makefile matches your created account
+3. sncast not installed - Run `make install-sncast`
+
+**Solution:**
+```bash
+# Verify account exists
+sncast account list
+
+# If account doesn't exist, create it
+make account-create
+
+# If account exists but topup fails, check admin/.env configuration
+```
 
 #### "make artifacts" fails - verifier.json not found
 

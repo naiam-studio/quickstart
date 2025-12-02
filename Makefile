@@ -11,7 +11,15 @@ account-create:
 		--name $(ACCOUNT_NAME)
 
 account-topup:
-	cd admin && TOPUP_ADDRESS=$$(sncast account list | grep -A 10 "$(ACCOUNT_NAME)" | grep "address:" | awk '{print $$2}') npm run topup
+	@echo "Getting account address..."
+	@ADDR=$$(sncast account list 2>/dev/null | grep -A 10 "$(ACCOUNT_NAME)" | grep "address:" | awk '{print $$2}'); \
+	if [ -z "$$ADDR" ]; then \
+		echo "Error: Account '$(ACCOUNT_NAME)' not found."; \
+		echo "Run 'make account-create' first to create the account."; \
+		exit 1; \
+	fi; \
+	echo "Account address: $$ADDR"; \
+	cd admin && TOPUP_ADDRESS=$$ADDR npm run topup
 
 account-deploy:
 	sncast account deploy \
