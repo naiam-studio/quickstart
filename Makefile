@@ -26,19 +26,34 @@ account-balance:
 ## Install dependencies (Automated)
 
 install-sncast:
-	./scripts/install-sncast.sh
+	-./scripts/install-sncast.sh
 
 install-noir:
-	./scripts/install-noir.sh
+	-./scripts/install-noir.sh
 
 install-scarb:
-	./scripts/install-scarb.sh
+	-./scripts/install-scarb.sh
 
 install-barretenberg:
-	./scripts/install-barretenberg.sh
+	-./scripts/install-barretenberg.sh
 
 install-all: install-sncast install-noir install-scarb install-barretenberg
-	@echo "All tools installed successfully!"
+	@echo ""
+	@echo "================================"
+	@echo "Installation Summary"
+	@echo "================================"
+	@echo ""
+	@command -v sncast >/dev/null 2>&1 && echo "✓ sncast: $$(sncast --version 2>&1 | head -1)" || echo "✗ sncast: Not installed (manual setup required)"
+	@command -v nargo >/dev/null 2>&1 && echo "✓ nargo: $$(nargo --version 2>&1 | head -1)" || echo "✗ nargo: Not installed"
+	@command -v scarb >/dev/null 2>&1 && echo "✓ scarb: $$(scarb --version 2>&1 | head -1)" || echo "✗ scarb: Not installed"
+	@command -v bb >/dev/null 2>&1 && echo "✓ bb: $$(bb --version 2>&1)" || echo "✗ bb: Not installed"
+	@command -v npm >/dev/null 2>&1 && echo "✓ npm: $$(npm --version)" || echo "✗ npm: Not installed"
+	@echo ""
+	@echo "Next steps:"
+	@echo "  1. make install-sncast    # If sncast is not installed"
+	@echo "  2. make account-create    # Create a new account"
+	@echo "  3. make account-deploy    # Deploy the account"
+	@echo ""
 
 setup:
 	./scripts/setup.sh
