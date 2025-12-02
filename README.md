@@ -1,6 +1,8 @@
-# [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?template_repository=naiam-studio/Oz-Kit-Ztarknet-Noir-Garaga)
+
+![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?template_repository=naiam-studio/Oz-Kit-Ztarknet-Noir-Garaga)
 
 # Oz Kit - Noir-Garaga-Ztarknet Kit
+
 
 Step-by-step template and tutorial to deploy a privacy (ZK) app on Ztarknet using Noir, Garaga, and Starknet. Includes Noir circuit integration, Cairo contract generation with Garaga, and scripts for deployment/interaction on the network.
 
@@ -8,15 +10,22 @@ Step-by-step template and tutorial to deploy a privacy (ZK) app on Ztarknet usin
 
 ## 🚀 Use this as a Template CodeSpace
 
-Click the **"Open in GitHub Codespaces"** badge above or use the GitHub UI to create a new Codespace from this repository. The devcontainer will set up all required tools and dependencies automatically.
-
 You can use this template as a starting point for your own ZK dApps on Starknet. Fork, clone, or open as a Codespace and start building!
 
 ---
 
 ## ⚡ Quick Start (30 minutes)
 
-The fastest way to get everything running:
+The fastest way to get everything running. Choose one:
+
+Option A — Open in Codespaces (recommended):
+
+```bash
+# Open directly in GitHub Codespaces (click the link)
+# https://github.com/codespaces/new?template_repository=naiam-studio/Oz-Kit-Ztarknet-Noir-Garaga
+```
+
+Option B — Clone locally:
 
 ```bash
 # 1. Clone the repository
@@ -32,7 +41,10 @@ make account-create
 
 # 4. Top up account via faucet at https://faucet.ztarknet.cash/ (paste the address above)
 
-# 5. Deploy account
+# 5. Install admin dependencies (required for top-up)
+cd admin && npm install && cd ..
+
+# 6. Deploy account
 make account-topup
 make account-deploy
 
@@ -50,7 +62,7 @@ cd ..
 garaga gen --system ultra_starknet_zk_honk --vk ./circuit/target/vk --project-name verifier
 cd verifier && scarb build && cd ..
 
-# 9. Run the frontend
+# 10. Run the frontend
 make artifacts
 cd app && npm install --legacy-peer-deps && npm run dev
 ```
