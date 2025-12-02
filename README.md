@@ -264,7 +264,7 @@ nargo execute witness
 Prove the circuit using Barretenberg with the `ultra_starknet_zk_honk` system:
 
 ```bash
-bb prove --scheme ultra_honk --zk --oracle_hash starknet -b ./target/circuit.json -w ./target/witness.gz -o ./target
+bb prove --scheme ultra_honk --zk --oracle_hash starknet -b ./target/circuit.json -w ./target/witness.gz -o ./target/proof
 ```
 
 Generate a verifying key:
