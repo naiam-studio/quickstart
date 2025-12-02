@@ -136,21 +136,62 @@ Install Starknet development suite (recommended via asdf):
 
 ### Create and Deploy Your Account
 
+The repository provides Makefile targets to create an account, deploy it and check the balance. These targets rely on the `sncast` CLI being installed and available on your `PATH`.
+
+1) Install `sncast` (required)
+
+```bash
+# Try the automated installer shipped with this repo. It will attempt
+# to download a prebuilt binary from common release locations and
+# place it in `/usr/local/bin`.
+make install-sncast
+
+# If the automated installer fails, install manually by either:
+#  - Downloading a prebuilt release from the project's GitHub releases
+#    and moving the binary to /usr/local/bin/sncast, or
+#  - Building from source (if the project provides a Rust repo):
+#
+#    git clone <SNCAST_REPO_URL>
+#    cd sncast
+#    cargo build --release
+#    sudo mv target/release/sncast /usr/local/bin/sncast
+
+# Verify installation
+sncast --help
+```
+
+2) Create the account
+
+After `sncast` is installed, create the account configured in this repo:
+
 ```bash
 make account-create
 ```
 
-Go to the [faucet](https://faucet.ztarknet.cash/) and top up your account address.
+3) Top up the account via the faucet
+
+Visit the Ztarknet faucet at https://faucet.ztarknet.cash/ and send tokens to the account address produced by `make account-create`. You can also use the helper `account-topup` target which reads the address from `sncast` and calls the `admin/topup` script:
+
+```bash
+make account-topup
+```
+
+4) Deploy the account contract
 
 ```bash
 make account-deploy
 ```
 
-Make sure you received the funds:
+5) Check the balance
 
 ```bash
 make account-balance
 ```
+
+Troubleshooting
+- If `make account-create` prints `sncast: No such file or directory`, ensure `sncast` is on your `PATH` and executable.
+- If you cannot find an official prebuilt binary, the recommended fallback is to build `sncast` from its upstream source via `cargo build --release` and move the produced binary to `/usr/local/bin`.
+
 
 ---
 
