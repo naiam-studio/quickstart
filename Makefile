@@ -63,4 +63,9 @@ setup:
 artifacts:
 	cp ./circuit/target/circuit.json ./app/src/assets/circuit.json
 	cp ./circuit/target/vk ./app/src/assets/vk.bin
-	cp ./verifier/target/release/verifier_UltraStarknetZKHonkVerifier.contract_class.json ./app/src/assets/verifier.json
+	@if [ -f ./verifier/target/release/verifier_UltraStarknetZKHonkVerifier.contract_class.json ]; then \
+	  cp ./verifier/target/release/verifier_UltraStarknetZKHonkVerifier.contract_class.json ./app/src/assets/verifier.json; \
+	  echo "Copied verifier.json"; \
+	else \
+	  echo "Skipping verifier.json (build optional and not found)"; \
+	fi

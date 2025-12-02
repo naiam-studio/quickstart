@@ -100,6 +100,16 @@ This will install Rust, Scarb, Noir, Barretenberg, and JavaScript dependencies i
 
 If you prefer to install tools individually, follow the steps below.
 
+#### 0. Install System Dependencies (Linux/Ubuntu)
+
+```bash
+# Required for Barretenberg (bb) to run properly
+sudo apt-get update
+sudo apt-get install -y libc++1
+```
+
+> **NOTE:** If you see errors like `libc++.so.1: cannot open shared object file` when running `bb`, install `libc++1` with the command above.
+
 #### 1. Install Rust and Cargo
 
 ```bash
@@ -443,6 +453,55 @@ bun run dev
 
 ## Troubleshooting
 
+### Common Issues
+
+#### "libc++.so.1: cannot open shared object file"
+
+This error occurs when running `bb` commands if the libc++ library is missing.
+
+**Solution:**
+```bash
+sudo apt-get update
+sudo apt-get install -y libc++1
+```
+
+#### "garaga: command not found"
+
+Garaga is installed in `~/.local/bin` via pip and may not be in your PATH.
+
+**Solution:**
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+# Add to ~/.bashrc or ~/.zshrc for persistence:
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+#### "nargo new circuit" fails with "directory already exists"
+
+This is harmless if you cloned the repo (circuit already exists). You can proceed with the next steps.
+
+#### "Account already exists" error
+
+This happens when re-running `make account-create` with the same account name. You can either:
+- Use the existing account (proceed to `make account-deploy`)
+- Delete `~/.starknet_accounts/` and create a new account
+
+#### "make artifacts" fails - verifier.json not found
+
+The verifier build is optional. The Makefile now skips verifier.json if not present and uses the included verifier instead.
+
+#### npm MODULE_NOT_FOUND errors
+
+Make sure all npm dependencies are installed:
+```bash
+# Install app dependencies
+cd app && npm install --legacy-peer-deps
+
+# Install admin dependencies (required for make account-topup)
+cd admin && npm install
+```
+
 ### macOS Issues
 
 Barretenberg and sncast have known issues on macOS:
@@ -453,19 +512,7 @@ Barretenberg and sncast have known issues on macOS:
 
 ### Large Calldata
 
-Garaga-generated calldata can be large (50-100+ KB). This is normal and doesn't affect functionality, but keep gas usage in mind when verifying proofs on-chain.
-
-### Environment Setup
-
-If you encounter missing libraries or dependency issues:
-
-```bash
-# Re-install system dependencies
-sudo apt-get update && sudo apt-get install -y libc++1
-
-# Re-install JavaScript dependencies
-cd app && npm install --legacy-peer-deps
-```
+Garaga-generated calldata can be large (50-100+ KB). This is normal and doesn't affect functionality, but keep gas usage in mind when verifying proofs on-chain
 
 ---
 
