@@ -25,13 +25,23 @@ account-balance:
 
 ## Install dependencies
 
-install-noir:
-	curl -L https://raw.githubusercontent.com/noir-lang/noirup/refs/heads/main/install | bash
-	noirup --version 1.0.0-beta.5
 
+# Instala Noir CLI 1.0.0-beta.1
+install-noir:
+	cargo install --locked --version 1.0.0-beta.1 noir
+
+
+
+# Instala Barretenberg (bb) 0.67.0
 install-barretenberg:
-	curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/refs/heads/master/barretenberg/bbup/install | bash
-	bbup --version 0.87.4-starknet.1
+	curl -L -o bb.tar.gz "<url_release_bb>"
+	tar -xzf bb.tar.gz
+	sudo mv bb /usr/local/bin/
+	rm -f bb.tar.gz
+
+# Instala Scarb 2.9.2
+install-scarb:
+	cargo install --locked --version 2.9.2 scarb
 
 ## Copy artifacts to app folder
 
