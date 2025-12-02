@@ -4,7 +4,8 @@ set -euo pipefail
 # Quick setup script: installs all required tools in sequence
 # Run this once to bootstrap the environment.
 
-REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_DIR="$(dirname "$SCRIPT_DIR")"
 
 echo "================================"
 echo "Oz Kit - Automatic Setup"
@@ -37,17 +38,17 @@ fi
 # 2. Scarb
 echo ""
 echo "[2/5] Installing Scarb..."
-"$REPO_DIR/scripts/install-scarb.sh" || echo "Warning: Scarb installation failed."
+"$SCRIPT_DIR/install-scarb.sh" || echo "Warning: Scarb installation failed."
 
 # 3. Noir
 echo ""
 echo "[3/5] Installing Noir CLI..."
-"$REPO_DIR/scripts/install-noir.sh" || echo "Warning: Noir installation failed."
+"$SCRIPT_DIR/install-noir.sh" || echo "Warning: Noir installation failed."
 
 # 4. Barretenberg
 echo ""
 echo "[4/5] Installing Barretenberg (bb)..."
-"$REPO_DIR/scripts/install-barretenberg.sh" || echo "Warning: Barretenberg installation failed."
+"$SCRIPT_DIR/install-barretenberg.sh" || echo "Warning: Barretenberg installation failed."
 
 # 5. JavaScript deps
 echo ""
