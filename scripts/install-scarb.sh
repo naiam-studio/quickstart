@@ -14,7 +14,12 @@ echo "Checking if scarb is already installed..."
 if command -v scarb >/dev/null 2>&1; then
   current_version=$(scarb --version 2>&1 | awk '{print $NF}' || echo "unknown")
   echo "scarb found at $(command -v scarb) (version: $current_version)"
-  exit 0
+  if [[ "$current_version" == "$SCARB_VERSION" ]]; then
+    echo "Required version already installed."
+    exit 0
+  else
+    echo "Different version detected (want $SCARB_VERSION). Will reinstall/downgrade."
+  fi
 fi
 
 echo "scarb not found. Attempting to download prebuilt release for Linux x86_64..."

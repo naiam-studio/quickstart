@@ -50,13 +50,12 @@ cd circuit
 nargo check
 nargo execute witness
 
-# 7. Generate proof and verifier
+# 7. Generate proof and verifying key
 bb prove --scheme ultra_honk --zk --oracle_hash starknet -b ./target/circuit.json -w ./target/witness.gz -o ./target/proof
 bb write_vk --scheme ultra_honk --oracle_hash starknet -b ./target/circuit.json -o ./target/vk
 cd ..
 
-# 8. Generate verifier contract and deploy
-garaga gen --system ultra_starknet_zk_honk --vk ./circuit/target/vk --project-name verifier
+# 8. (Optional) Build the included verifier contract
 cd verifier && scarb build && cd ..
 
 # 9. Run the frontend
@@ -162,27 +161,21 @@ bbup --version 0.67.0
 bb --version  # Should output: 0.67.0
 ```
 
-#### 6. Install Garaga 0.15.5 (Python CLI)
+#### 5. Install Garaga 0.15.5 (Python CLI)
 
-Garaga es la herramienta que genera el contrato verificador para Starknet y serializa la prueba como calldata.
+Garaga generates the verifier contract for Starknet and serializes proofs as calldata.
 
 ```bash
 # Install via pip (recommended version)
-pip install garaga==0.15.5
+pip install --user garaga==0.15.5
 
 # Verify installation
 garaga --version  # Should output: garaga 0.15.5
 ```
 
-Si prefieres instalar la última versión disponible:
+Note: Ensure your Python user bin directory is in PATH (typically `~/.local/bin`).
 
-```bash
-pip install garaga
-```
-
-Nota: asegúrate de que tu entorno Python esté disponible en PATH (por ejemplo, usando `python3`/`pip3`) y que el binario `garaga` quede accesible en tu shell.
-
-#### 5. Install JavaScript Dependencies in `app`
+#### 6. Install JavaScript Dependencies in `app`
 
 ```bash
 # Navigate to the app directory
@@ -305,24 +298,27 @@ Generate a verifying key:
 bb write_vk --scheme ultra_honk --oracle_hash starknet -b ./target/circuit.json -o ./target/vk
 ```
 
-### Verifier Contract
+### Verifier Contract (Optional)
 
-Use the provided verifier project (recommended for reproducibility):
+This repository includes a pre-configured verifier contract in the `verifier/` directory.
+
+**Option A — Use included verifier (recommended):**
 
 ```bash
 cd verifier
-scarb build
+scarb build  # Note: May require compatible Scarb/Cairo versions
 cd ..
 ```
 
-Optional — regenerate with Garaga (advanced):
+**Option B — Generate fresh verifier with Garaga:**
 
 ```bash
-# Requires a compatible verification key and Garaga >= 0.15
-garaga gen --system ultra_starknet_honk --vk ./circuit/target/vk --project-name verifier_auto
-cd verifier_auto && scarb build && cd ..
+# Requires bb 0.67.0, Garaga >= 0.15.5, and compatible VK format
+garaga gen --system ultra_starknet_honk --vk ./circuit/target/vk --project-name verifier_new
+cd verifier_new && scarb build && cd ..
 ```
-If the command fails parsing the VK, ensure you're using bb 0.67.0 and regenerated the VK with the commands above. Some Garaga versions may not parse all VK variants.
+
+**Note:** If `garaga gen` or `scarb build` fails, it's typically due to version mismatches between bb/Garaga/Cairo. The frontend and proof generation work independently of the verifier contract build.
 
 ### Deploy Verifier Contract
 
