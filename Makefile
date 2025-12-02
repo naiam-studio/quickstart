@@ -23,25 +23,25 @@ account-balance:
 		--token-address $(FEE_TOKEN_ADDRESS) \
 		--url $(URL)
 
-## Install dependencies
+## Install dependencies (Automated)
 
+install-sncast:
+	./scripts/install-sncast.sh
 
-# Instala Noir CLI 1.0.0-beta.1
 install-noir:
-	cargo install --locked --version 1.0.0-beta.1 noir
+	./scripts/install-noir.sh
 
-
-
-# Instala Barretenberg (bb) 0.67.0
-install-barretenberg:
-	curl -L -o bb.tar.gz "<url_release_bb>"
-	tar -xzf bb.tar.gz
-	sudo mv bb /usr/local/bin/
-	rm -f bb.tar.gz
-
-# Instala Scarb 2.9.2
 install-scarb:
-	cargo install --locked --version 2.9.2 scarb
+	./scripts/install-scarb.sh
+
+install-barretenberg:
+	./scripts/install-barretenberg.sh
+
+install-all: install-sncast install-noir install-scarb install-barretenberg
+	@echo "All tools installed successfully!"
+
+setup:
+	./scripts/setup.sh
 
 ## Copy artifacts to app folder
 

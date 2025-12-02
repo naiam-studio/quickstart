@@ -14,6 +14,49 @@ You can use this template as a starting point for your own ZK dApps on Starknet.
 
 ---
 
+## ⚡ Quick Start (30 minutes)
+
+The fastest way to get everything running:
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/naiam-studio/Oz-Kit-Ztarknet-Noir-Garaga.git
+cd Oz-Kit-Ztarknet-Noir-Garaga
+
+# 2. Run automated setup (installs Rust, Scarb, Noir, bb, and npm deps)
+./scripts/setup.sh
+
+# 3. Install sncast and create account
+make install-sncast
+make account-create
+
+# 4. Top up account via faucet at https://faucet.ztarknet.cash/ (paste the address above)
+
+# 5. Deploy account
+make account-topup
+make account-deploy
+
+# 6. Create a circuit and prove it
+cd circuit
+nargo check
+nargo execute witness
+
+# 7. Generate proof and verifier
+bb prove --scheme ultra_honk --zk --oracle_hash starknet -b ./target/circuit.json -w ./target/witness.gz -o ./target
+bb write_vk --scheme ultra_honk --oracle_hash starknet -b ./target/circuit.json -o ./target
+cd ..
+
+# 8. Generate verifier contract and deploy
+garaga gen --system ultra_starknet_zk_honk --vk ./circuit/target/vk --project-name verifier
+cd verifier && scarb build && cd ..
+
+# 9. Run the frontend
+make artifacts
+cd app && npm install --legacy-peer-deps && npm run dev
+```
+
+---
+
 ## ⚡️ Reproducible Compatible Environment (Tested Versions)
 
 > **IMPORTANT:** These versions have been verified as compatible for the Noir → Garaga → Cairo → Ztarknet flow.
@@ -31,6 +74,20 @@ You can use this template as a starting point for your own ZK dApps on Starknet.
 > **NOTE:** The entire pipeline (circuit, proofs, vk, verifier, calldata, and contracts) is configured to use the `ultra_starknet_zk_honk` system. Do not mix with other systems (like `ultra_keccak_honk`) unless you adapt the whole flow and contracts.
 
 ### Installation Steps (Linux/Ubuntu - Tested)
+
+**Automated Setup (Recommended)**
+
+Run the all-in-one setup script to install all tools at once:
+
+```bash
+./scripts/setup.sh
+```
+
+This will install Rust, Scarb, Noir, Barretenberg, and JavaScript dependencies in sequence.
+
+**Manual Installation (Step-by-Step)**
+
+If you prefer to install tools individually, follow the steps below.
 
 #### 1. Install Rust and Cargo
 
@@ -57,12 +114,11 @@ fi
 #### 2. Install Scarb 2.9.2
 
 ```bash
-# Download the official release binary
-cd /tmp
-curl -LO https://github.com/software-mansion/scarb/releases/download/v2.9.2/scarb-v2.9.2-x86_64-unknown-linux-gnu.tar.gz
-tar -xzf scarb-v2.9.2-x86_64-unknown-linux-gnu.tar.gz
-sudo mv scarb-v2.9.2-x86_64-unknown-linux-gnu/bin/scarb /usr/local/bin/
-rm -rf scarb-v2.9.2-x86_64-unknown-linux-gnu*
+# Use the automated installer
+make install-scarb
+
+# Or run the script directly
+./scripts/install-scarb.sh
 
 # Verify installation
 scarb --version  # Should output: scarb 2.9.2
@@ -71,12 +127,11 @@ scarb --version  # Should output: scarb 2.9.2
 #### 3. Install Noir CLI 1.0.0-beta.1
 
 ```bash
-# Download the official release binary
-cd /tmp
-curl -LO https://github.com/noir-lang/noir/releases/download/v1.0.0-beta.1/nargo-x86_64-unknown-linux-gnu.tar.gz
-tar -xzf nargo-x86_64-unknown-linux-gnu.tar.gz
-sudo mv nargo /usr/local/bin/
-rm nargo-x86_64-unknown-linux-gnu.tar.gz
+# Use the automated installer
+make install-noir
+
+# Or run the script directly
+./scripts/install-noir.sh
 
 # Verify installation
 nargo --version  # Should output: nargo version = 1.0.0-beta.1
@@ -85,17 +140,11 @@ nargo --version  # Should output: nargo version = 1.0.0-beta.1
 #### 4. Install Barretenberg (bb) 0.67.0
 
 ```bash
-# Install Rust first if not done
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-source $HOME/.cargo/env
+# Use the automated installer shipped with this repo
+make install-barretenberg
 
-# Install system dependencies required by Barretenberg
-sudo apt-get update
-sudo apt-get install -y libc++1
-
-# Install bb using the official installer
+# If that fails, try the official Aztec installer
 curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/master/barretenberg/cpp/installation/install | bash
-bbup --version 0.67.0
 
 # Verify installation
 bb --version  # Should output: 0.67.0
@@ -188,10 +237,10 @@ make account-deploy
 make account-balance
 ```
 
-Troubleshooting
+**Troubleshooting**
+
 - If `make account-create` prints `sncast: No such file or directory`, ensure `sncast` is on your `PATH` and executable.
 - If you cannot find an official prebuilt binary, the recommended fallback is to build `sncast` from its upstream source via `cargo build --release` and move the produced binary to `/usr/local/bin`.
-
 
 ---
 
