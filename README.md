@@ -35,30 +35,33 @@ cd Oz-Kit-Ztarknet-Noir-Garaga
 # 2. Run automated setup (installs Rust, Scarb, Noir, bb, and npm deps)
 ./scripts/setup.sh
 
-# 3. Install sncast and create account
+# 3. Configure PATH for user-installed tools (required for garaga)
+export PATH="$HOME/.local/bin:$PATH"
+
+# 4. Install sncast and create account
 make install-sncast
 make account-create
 
-# 4. Top up account via faucet at https://faucet.ztarknet.cash/ (paste the address above)
+# 5. Top up account via faucet at https://faucet.ztarknet.cash/ (paste the address above)
 
-# 5. Deploy account
+# 6. Deploy account
 make account-topup
 make account-deploy
 
-# 6. Create a circuit and prove it
+# 7. Create a circuit and prove it
 cd circuit
 nargo check
 nargo execute witness
 
-# 7. Generate proof and verifying key
+# 8. Generate proof and verifying key
 bb prove --scheme ultra_honk --zk --oracle_hash starknet -b ./target/circuit.json -w ./target/witness.gz -o ./target/proof
 bb write_vk --scheme ultra_honk --oracle_hash starknet -b ./target/circuit.json -o ./target/vk
 cd ..
 
-# 8. (Optional) Build the included verifier contract
+# 9. (Optional) Build the included verifier contract
 cd verifier && scarb build && cd ..
 
-# 9. Run the frontend
+# 10. Run the frontend
 make artifacts
 cd app && npm install --legacy-peer-deps && npm run dev
 ```
