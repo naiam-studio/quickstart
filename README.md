@@ -43,11 +43,12 @@ export PATH="$HOME/.local/bin:$PATH"
 # 4. Install sncast and create account
 make install-sncast
 make account-create
+# Copy the account address from the output
 
-# 5. Top up account via faucet at https://faucet.ztarknet.cash/ (paste the address above)
+# 5. Top up account via faucet at https://faucet.ztarknet.cash/
+# Paste the address from step 4 and request tokens
 
 # 6. Deploy account
-make account-topup
 make account-deploy
 
 # 7. Create a circuit and prove it
@@ -267,19 +268,29 @@ make account-create
 
 3) Top up the account via the faucet
 
-Visit the Ztarknet faucet at https://faucet.ztarknet.cash/ and send tokens to the account address produced by `make account-create`. 
+**Recommended Method - Use Manual Faucet:**
 
-**Option A - Manual (Recommended for first time):**
-Copy the account address from the output of `make account-create` and paste it in the faucet.
+Visit the Ztarknet faucet at https://faucet.ztarknet.cash/ and send tokens to the account address produced by `make account-create`.
 
-**Option B - Automated (requires admin/.env configuration):**
-Use the helper `account-topup` target which reads the address from `sncast` and calls the `admin/topup` script:
+1. Copy the account address from step 2 output
+2. Visit https://faucet.ztarknet.cash/
+3. Paste your address and request tokens
+4. Wait for confirmation
+
+**Alternative - Automated Topup (requires admin account with funds):**
+
+If you have an admin account with STRK tokens, you can automate the topup:
 
 ```bash
+# 1. Configure admin account (one-time setup)
+cp admin/.env.example admin/.env
+# Edit admin/.env with your admin address and private key
+
+# 2. Run automated topup
 make account-topup
 ```
 
-> **Note:** `make account-topup` requires the account to exist first. Run `make account-create` before using this command.
+> **Note:** Most users should use the manual faucet. The automated method is only for those who already have a funded admin account.
 
 4) Deploy the account contract
 
@@ -497,22 +508,27 @@ This happens when re-running `make account-create` with the same account name. Y
 - Use the existing account (proceed to `make account-deploy`)
 - Delete `~/.starknet_accounts/` and create a new account
 
-#### "make account-topup" fails with "Cannot read properties of undefined"
+#### "make account-topup" fails with "Admin Configuration Missing"
 
-This error occurs when the account address is not found. Possible causes:
-1. Account not created yet - Run `make account-create` first
-2. Account name mismatch - Check that the account name in Makefile matches your created account
-3. sncast not installed - Run `make install-sncast`
+This error occurs because `make account-topup` requires an admin account with funds, which most users don't have.
 
-**Solution:**
+**Recommended Solution - Use Manual Faucet:**
 ```bash
-# Verify account exists
+# 1. Get your account address
 sncast account list
 
-# If account doesn't exist, create it
-make account-create
+# 2. Visit the faucet
+# https://faucet.ztarknet.cash/
 
-# If account exists but topup fails, check admin/.env configuration
+# 3. Paste your address and request tokens
+```
+
+**Alternative - Configure Automated Topup:**
+```bash
+# Only if you have an admin account with STRK tokens
+cp admin/.env.example admin/.env
+# Edit admin/.env with ADMIN_ADDRESS and ADMIN_KEY
+make account-topup
 ```
 
 #### "make artifacts" fails - verifier.json not found

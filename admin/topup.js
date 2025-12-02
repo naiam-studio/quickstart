@@ -8,20 +8,30 @@ const fee_token_address = '0x1ad102b4c4b3e40a51b6fb8a446275d600555bd63a95cdceed3
 // Validate required environment variables
 if (!recipient) {
     console.error('Error: TOPUP_ADDRESS is not set.');
-    console.error('Please run: make account-create');
-    console.error('Or set TOPUP_ADDRESS environment variable manually.');
+    console.error('This script requires TOPUP_ADDRESS environment variable.');
+    console.error('');
+    console.error('Make sure you created an account first:');
+    console.error('  make account-create');
     process.exit(1);
 }
 
-if (!process.env.ADMIN_ADDRESS) {
-    console.error('Error: ADMIN_ADDRESS is not set in .env file.');
-    console.error('Please configure admin/.env with ADMIN_ADDRESS and ADMIN_KEY.');
-    process.exit(1);
-}
-
-if (!process.env.ADMIN_KEY) {
-    console.error('Error: ADMIN_KEY is not set in .env file.');
-    console.error('Please configure admin/.env with ADMIN_ADDRESS and ADMIN_KEY.');
+if (!process.env.ADMIN_ADDRESS || !process.env.ADMIN_KEY) {
+    console.error('========================================');
+    console.error('Admin Configuration Missing');
+    console.error('========================================');
+    console.error('');
+    console.error('This automated topup script requires an admin account with STRK tokens.');
+    console.error('');
+    console.error('RECOMMENDED: Use the manual faucet instead:');
+    console.error('  1. Visit: https://faucet.ztarknet.cash/');
+    console.error('  2. Paste your account address from "make account-create"');
+    console.error('  3. Request tokens');
+    console.error('');
+    console.error('ALTERNATIVE: Configure automated topup:');
+    console.error('  1. Copy admin/.env.example to admin/.env');
+    console.error('  2. Add your admin account address and private key');
+    console.error('  3. Run "make account-topup" again');
+    console.error('');
     process.exit(1);
 }
 
